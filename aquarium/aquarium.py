@@ -1,8 +1,10 @@
 from solid2 import *
 
-total_height = 160
-width = 76
-depth = 15
+total_height = 150
+top_piece_width = 3
+light_width = 67
+width = light_width + top_piece_width * 2 + 1
+depth = 10
 
 tank_overhang = 30
 
@@ -31,7 +33,6 @@ def get_cyclinder_base(cylinder_depth):
 def left_piece():
     main_piece = cube([depth, width, total_height])
 
-    top_piece_width = 3
     light_side_right = cube([depth, top_piece_width, 10]).up(total_height)
     light_side_left = light_side_right.forward(width - top_piece_width)
 
@@ -54,7 +55,8 @@ def left_piece():
 
 
 def right_piece():
-    main_piece = cube([depth, width, total_height])
+    main_piece = cube(
+        [depth, width, second_piece_offset_z + second_piece_height + depth])
 
     bottom_piece = cube([total_lip_width - glass_thickness, width,
                         second_piece_height]).right(depth)
@@ -62,8 +64,14 @@ def right_piece():
     top_large_piece_height = total_height - \
         second_piece_offset_z - second_piece_height
 
-    top_large_piece = cube([total_lip_width, width, top_large_piece_height]).up(
-        second_piece_offset_z + second_piece_height).right(depth)
+    top_large_piece = cube([total_lip_width, width, top_large_piece_height])
+
+    top_reducer_height = top_large_piece_height - depth
+
+    top_reducer = cube(
+        [total_lip_width, width, top_reducer_height]).left(10).up(10)
+    # .up(
+    #     second_piece_offset_z + second_piece_height + 10)
 
     first_cylinder = get_cyclinder_base(depth + total_lip_width).forward(
         hole_offset_1).up(cylinder_height_offset)
@@ -74,7 +82,11 @@ def right_piece():
     return difference()(
         union()(
             main_piece, bottom_piece,
-            top_large_piece
+            difference()(
+                top_large_piece,
+                top_reducer
+            ).up(
+                second_piece_offset_z + second_piece_height).right(depth),
         ),
         first_cylinder,
         second_cylinder
@@ -88,4 +100,4 @@ if __name__ == "__main__":
     ).save_as_scad('debug.scad')
 
     left_piece().rotateY(-90).save_as_scad('left_piece.scad')
-    right_piece().rotateY(-90).save_as_scad('right_piece.scad')
+    right_piece().rotateY(90).save_as_scad('right_piece.scad')
