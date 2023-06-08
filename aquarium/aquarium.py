@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from solid2 import *
 
 total_height = 150
@@ -101,3 +102,4 @@ if __name__ == "__main__":
 
     left_piece().rotateY(-90).save_as_scad('left_piece.scad')
     right_piece().rotateY(90).save_as_scad('right_piece.scad')
+    print("Created scad files")
