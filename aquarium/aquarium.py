@@ -20,8 +20,12 @@ total_lip_width = lip_width_1 + lip_width_2
 
 second_piece_offset_z = 30
 second_piece_height = 15
+# move bottom right piece up closer to the aquarium lip
+second_piece_adjustment = 5
 
 glass_thickness = 5
+# not sure why but make the right piece's bottom a little less deep
+second_piece_depth_adjustment = 6
 cylinder_height_offset = 100
 
 cylinder_base = cylinder(r=3.5, h=depth).rotateY(90)
@@ -57,10 +61,10 @@ def left_piece():
 
 def right_piece():
     main_piece = cube(
-        [depth, width, second_piece_offset_z + second_piece_height + depth])
+        [depth, width, second_piece_offset_z + second_piece_height + depth - second_piece_adjustment]).up(second_piece_adjustment)
 
-    bottom_piece = cube([total_lip_width - glass_thickness, width,
-                        second_piece_height]).right(depth)
+    bottom_piece = cube([total_lip_width - glass_thickness - second_piece_depth_adjustment, width,
+                        second_piece_height - second_piece_adjustment]).right(depth).up(second_piece_adjustment)
 
     top_large_piece_height = total_height - \
         second_piece_offset_z - second_piece_height
